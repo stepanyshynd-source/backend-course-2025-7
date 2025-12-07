@@ -5,19 +5,21 @@ const express = require('express');
 const multer = require('multer');
 const { program } = require('commander');
 const swaggerUi = require('swagger-ui-express');
+require('dotenv').config();
 
 //Налаштування параметрів командного рядка
 program
-  .requiredOption('-h, --host <host>', 'адреса сервера')
-  .requiredOption('-p, --port <port>', 'порт сервера')
-  .requiredOption('-c, --cache <dir>', 'шлях до директорії кешу');
+  .option('-h, --host <host>')
+  .option('-p, --port <port>')
+  .option('-c, --cache <dir>');
 
 program.parse(process.argv);
 
 const options = program.opts();
-const host = options.host;
-const port = Number(options.port);
-const cacheDir = options.cache;
+const host = options.host || process.env.HOST;
+const port = Number(options.port || process.env.PORT);
+const cacheDir = options.cache || process.env.CACHE_DIR;
+
 
 //Створення директорії кешу, якщо її немає
 if (!fs.existsSync(cacheDir)) {
